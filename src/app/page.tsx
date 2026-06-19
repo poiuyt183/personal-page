@@ -20,14 +20,6 @@ const SpotifyEmbed = dynamic(() => import("@/components/home/SpotifyEmbed"), {
 
 const AboutSection = dynamic(() => import("@/components/home/AboutSection"));
 
-/* ── metadata ── */
-export const metadata: Metadata = {
-  title: "Hoshikira | Frontend Developer",
-  description:
-    "Personal portfolio of Hoshikira — frontend developer crafting modern, performant web experiences.",
-  icons: { icon: "/favicon.png" },
-};
-
 /* ══════════════════════════════════════════════════ */
 const Home = () => {
   return (
@@ -87,7 +79,7 @@ const Home = () => {
               <div className="relative h-36 w-36 overflow-hidden rounded-full border-2 border-primary/50 sm:h-44 sm:w-44">
                 <Image
                   src="/static/home/avt.jpg"
-                  alt="Hoshikira portrait"
+                  alt="Kira portrait"
                   width={176} height={176}
                   sizes="(max-width: 640px) 144px, 176px"
                   priority
@@ -106,7 +98,7 @@ const Home = () => {
               Hello, I&apos;m
             </p>
             <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl">
-              Hoshikira
+              Kira
               <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
                 .dev
               </span>

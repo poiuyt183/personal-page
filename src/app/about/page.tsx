@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import Button from "@/components/Button";
 import SkillsSection from "@/components/home/SkillsSection";
 
@@ -162,7 +161,7 @@ const About = () => {
         <div className="relative flex min-h-[55vh] items-end lg:min-h-[65vh]">
           <Image
             src="/static/about/my-image.webp"
-            alt="Hoshikira"
+            alt="Kira"
             fill
             sizes="100vw"
             priority
@@ -180,7 +179,7 @@ const About = () => {
                 About me
               </motion.p>
               <motion.h1 variants={fadeUp} className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
-                Hoshikira<span className="text-primary">.dev</span>
+                Kira<span className="text-primary">.dev</span>
               </motion.h1>
               <motion.div variants={fadeUp} className="mt-3 flex flex-wrap items-center gap-2">
                 <span className="rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">

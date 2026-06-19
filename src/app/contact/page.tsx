@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import type { Metadata } from "next";
 import { Facebook, LinkedIn, Mail, X, Insta } from "@/components/icons";
 
 const fadeUp = {
@@ -31,7 +30,7 @@ const contacts = [
   {
     label: "LinkedIn",
     value: "Trần Văn Khuyến",
-    href: "https://www.linkedin.com/in/hoshikira/",
+    href: "http://www.linkedin.com/in/hoshikira",
     Icon: LinkedIn,
   },
   {
@@ -42,7 +41,7 @@ const contacts = [
   },
   {
     label: "Instagram",
-    value: "@hoshikira18",
+    value: "@Kira18",
     href: "https://www.instagram.com/hoshikira18/",
     Icon: Insta,
   },

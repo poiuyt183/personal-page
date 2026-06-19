@@ -103,7 +103,7 @@ const AboutSection = () => {
             <div className="relative overflow-hidden rounded-2xl">
               <Image
                 src="/static/about/my-image.webp"
-                alt="Hoshikira working"
+                alt="Kira working"
                 width={600}
                 height={720}
                 sizes="(max-width: 1024px) 100vw, 50vw"

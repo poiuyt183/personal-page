@@ -22,7 +22,7 @@ const navItems = [
 
 const socialItems = [
   {
-    href: "https://www.facebook.com/Poiuyt18",
+    href: "https://www.facebook.com/hoshikira18",
     Icon: Facebook,
     label: "Facebook",
   },
@@ -32,12 +32,12 @@ const socialItems = [
     label: "Twitter",
   },
   {
-    href: "https://www.instagram.com/Poiuyt18/",
+    href: "https://www.instagram.com/hoshikira18/",
     Icon: Insta,
     label: "Instagram",
   },
   {
-    href: "https://www.linkedin.com/in/Poiuyt",
+    href: "https://www.linkedin.com/in/hoshikira",
     Icon: LinkedIn,
     label: "LinkedIn",
   },
