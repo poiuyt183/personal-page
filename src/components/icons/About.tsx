@@ -3,27 +3,46 @@ import React from "react";
 const About = ({
   color,
   className = "",
+  strokeWidth = "1.5",
 }: {
   color?: string;
   className?: string;
-}) => {
-  return (
-    <svg
-      className={className}
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <path
-        stroke={color}
-        strokeWidth="1.2"
-        d="M7 17v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-4a3 3 0 0 0-3 3Zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-      />
-    </svg>
-  );
-};
+  strokeWidth?: string;
+}) => (
+  <svg
+    className={className}
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    {/* ID card icon — more fitting for an About/profile page */}
+    <rect
+      x="2"
+      y="5"
+      width="20"
+      height="14"
+      stroke={color ?? "currentColor"}
+      strokeWidth={strokeWidth}
+      strokeLinejoin="miter"
+    />
+    <circle
+      cx="8"
+      cy="12"
+      r="2.5"
+      stroke={color ?? "currentColor"}
+      strokeWidth={strokeWidth}
+    />
+    <path
+      stroke={color ?? "currentColor"}
+      strokeLinecap="butt"
+      strokeLinejoin="miter"
+      strokeWidth={strokeWidth}
+      d="M13 9h6M13 12h5M13 15h4"
+    />
+  </svg>
+);
 
 export default About;

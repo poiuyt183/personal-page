@@ -1,137 +1,471 @@
-"use client"
-import "@/app/styles/animation/fadeout.css";
-import Intro from "@/components/about/Intro";
-import Skills, { SkillItem } from "@/components/about/Skills";
-import TimelineSection from "@/components/about/TimelineSection";
-import Button from "@/components/Button";
-import Writer from "@/components/home/Writer";
-import DownButton from "@/components/layout/DownButton";
+"use client";
+
+import { motion } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+import Link from "next/link";
+import Button from "@/components/Button";
+import SkillsSection from "@/components/home/SkillsSection";
 
-// export const metadata: Metadata = {
-//   title: "Hoshikira | About",
-//   icons: {
-//     icon: "/favicon.png",
-//   },
-// };
+/* ─────────────────────────────────────────
+   Animation helpers
+───────────────────────────────────────── */
+const fadeUp = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+};
+const fadeLeft = {
+  hidden: { opacity: 0, x: 32 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+};
+const stagger = (delay = 0.1) => ({
+  hidden: {},
+  show: { transition: { staggerChildren: delay } },
+});
+const vp = { once: true, margin: "-60px" };
 
-const feSkills: SkillItem[] = [
+/* ─────────────────────────────────────────
+   Data
+───────────────────────────────────────── */
+const experience = [
   {
-    title: "JavaScript",
-    icon: <svg
-      className="min-h-7 w-7 min-w-7"
-      role="img"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="#717171"
-    >
-      <title>JavaScript</title>
-      <path d="M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004.029-.09.24-.705.074-1.65l.046.067zm-8.983-7.245h-2.248c0 1.938-.009 3.864-.009 5.805 0 1.232.063 2.363-.138 2.711-.33.689-1.18.601-1.566.48-.396-.196-.597-.466-.83-.855-.063-.105-.11-.196-.127-.196l-1.825 1.125c.305.63.75 1.172 1.324 1.517.855.51 2.004.675 3.207.405.783-.226 1.458-.691 1.811-1.411.51-.93.402-2.07.397-3.346.012-2.054 0-4.109 0-6.179l.004-.056z"></path>
-    </svg>
-  }, {
-    title: "ReactJS",
-    icon: <svg
-      className="min-h-7 w-7 min-w-7 text-[#717171]"
-      height="28"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
-      viewBox="0 0 24 24"
-    >
-      <path d="M21.718 12c0-1.429-1.339-2.681-3.467-3.5.029-.18.077-.37.1-.545.217-2.058-.273-3.543-1.379-4.182-1.235-.714-2.983-.186-4.751 1.239C10.45 3.589 8.7 3.061 7.468 3.773c-1.107.639-1.6 2.124-1.379 4.182.018.175.067.365.095.545-2.127.819-3.466 2.071-3.466 3.5 0 1.429 1.339 2.681 3.466 3.5-.028.18-.077.37-.095.545-.218 2.058.272 3.543 1.379 4.182.376.213.803.322 1.235.316a5.987 5.987 0 0 0 3.514-1.56 5.992 5.992 0 0 0 3.515 1.56 2.44 2.44 0 0 0 1.236-.316c1.106-.639 1.6-2.124 1.379-4.182-.019-.175-.067-.365-.1-.545 2.132-.819 3.471-2.071 3.471-3.5Zm-6.01-7.548a1.5 1.5 0 0 1 .76.187c.733.424 1.055 1.593.884 3.212-.012.106-.043.222-.058.33-.841-.243-1.7-.418-2.57-.523a16.165 16.165 0 0 0-1.747-1.972 4.9 4.9 0 0 1 2.731-1.234Zm-7.917 8.781c.172.34.335.68.529 1.017.194.337.395.656.6.969a14.09 14.09 0 0 1-1.607-.376 14.38 14.38 0 0 1 .478-1.61Zm-.479-4.076a14.085 14.085 0 0 1 1.607-.376c-.205.313-.405.634-.6.969-.195.335-.357.677-.529 1.017-.19-.527-.35-1.064-.478-1.61ZM8.3 12a19.32 19.32 0 0 1 .888-1.75c.33-.568.69-1.118 1.076-1.65.619-.061 1.27-.1 1.954-.1.684 0 1.333.035 1.952.1a19.63 19.63 0 0 1 1.079 1.654c.325.567.621 1.15.887 1.746a18.869 18.869 0 0 1-1.953 3.403 19.218 19.218 0 0 1-3.931 0 20.169 20.169 0 0 1-1.066-1.653A19.324 19.324 0 0 1 8.3 12Zm7.816 2.25c.2-.337.358-.677.53-1.017.191.527.35 1.065.478 1.611a14.48 14.48 0 0 1-1.607.376c.202-.314.404-.635.597-.97h.002Zm.53-3.483c-.172-.34-.335-.68-.53-1.017a20.214 20.214 0 0 0-.6-.97c.542.095 1.078.22 1.606.376a14.111 14.111 0 0 1-.478 1.611h.002ZM12.217 6.34c.4.375.777.773 1.13 1.193-.37-.02-.746-.033-1.129-.033s-.76.013-1.131.033c.353-.42.73-.817 1.13-1.193Zm-4.249-1.7a1.5 1.5 0 0 1 .76-.187 4.9 4.9 0 0 1 2.729 1.233A16.253 16.253 0 0 0 9.71 7.658c-.87.105-1.728.28-2.569.524-.015-.109-.047-.225-.058-.331-.171-1.619.151-2.787.885-3.211ZM3.718 12c0-.9.974-1.83 2.645-2.506.218.857.504 1.695.856 2.506-.352.811-.638 1.65-.856 2.506C4.692 13.83 3.718 12.9 3.718 12Zm4.25 7.361c-.734-.423-1.056-1.593-.885-3.212.011-.106.043-.222.058-.331.84.243 1.697.418 2.564.524a16.37 16.37 0 0 0 1.757 1.982c-1.421 1.109-2.714 1.488-3.494 1.037Zm3.11-2.895c.374.021.753.034 1.14.034.387 0 .765-.013 1.139-.034a14.4 14.4 0 0 1-1.14 1.215 14.248 14.248 0 0 1-1.139-1.215Zm5.39 2.895c-.782.451-2.075.072-3.5-1.038a16.248 16.248 0 0 0 1.757-1.981 16.41 16.41 0 0 0 2.565-.523c.015.108.046.224.058.33.175 1.619-.148 2.789-.88 3.212Zm1.6-4.854A16.563 16.563 0 0 0 17.216 12c.352-.812.638-1.65.856-2.507 1.671.677 2.646 1.607 2.646 2.507 0 .9-.975 1.83-2.646 2.507h-.004Z" />
-      <path d="M12.215 13.773a1.792 1.792 0 1 0-1.786-1.8v.006a1.787 1.787 0 0 0 1.786 1.794Z" />
-    </svg>
-  }, {
-    title: "NextJS",
-    icon: <svg
-      className="min-h-7 w-7 min-w-7"
-      xmlns="http://www.w3.org/2000/svg"
-      shapeRendering="geometricPrecision"
-      fill="#717171"
-      textRendering="geometricPrecision"
-      imageRendering="optimizeQuality"
-      fillRule="evenodd"
-      clipRule="evenodd"
-      viewBox="0 0 512 103.22"
-    >
-      <path d="M340.36.04h89.18V16.5h-35.38v86.6h-17.69V16.5h-36.11V.04zM503.8 70.86c-.19-1.82-1.03-3.25-2.49-4.27-1.48-1.03-3.38-1.54-5.72-1.54-1.64 0-3.05.25-4.23.74-1.17.49-2.08 1.15-2.71 1.99-.62.84-.93 1.8-.96 2.87 0 .9.22 1.68.64 2.33.42.66.98 1.22 1.71 1.67.72.46 1.52.83 2.4 1.14.89.31 1.77.57 2.66.78l4.09 1c1.64.38 3.23.89 4.76 1.54 1.52.64 2.9 1.45 4.11 2.43 1.21.98 2.17 2.16 2.87 3.54.71 1.39 1.07 3.01 1.07 4.87 0 2.52-.65 4.73-1.95 6.64-1.31 1.9-3.19 3.39-5.66 4.46-2.46 1.07-5.43 1.61-8.93 1.61-3.38 0-6.33-.52-8.81-1.56-2.49-1.03-4.44-2.54-5.84-4.52-1.4-1.99-2.15-4.41-2.26-7.26h7.76c.11 1.49.59 2.73 1.41 3.74.82.99 1.9 1.72 3.22 2.22 1.33.48 2.82.73 4.46.73 1.71 0 3.22-.26 4.53-.77 1.29-.51 2.31-1.21 3.04-2.14.75-.9 1.12-1.98 1.13-3.21-.01-1.12-.35-2.05-.99-2.79-.66-.73-1.57-1.34-2.74-1.84-1.17-.49-2.54-.94-4.1-1.33l-4.96-1.25c-3.58-.91-6.42-2.3-8.5-4.15-2.08-1.86-3.11-4.31-3.11-7.39 0-2.53.69-4.75 2.1-6.65 1.39-1.9 3.29-3.38 5.7-4.43 2.42-1.06 5.15-1.58 8.2-1.58 3.09 0 5.8.52 8.14 1.58 2.33 1.05 4.17 2.51 5.5 4.38s2.02 4 2.06 6.42h-7.6zm-40.09-11.8h7.84v30.19c-.01 2.78-.61 5.15-1.79 7.15-1.18 2-2.83 3.52-4.93 4.59-2.1 1.07-4.56 1.61-7.35 1.61-2.55 0-4.84-.46-6.88-1.36-2.04-.9-3.66-2.24-4.84-4.01-1.2-1.78-1.79-3.98-1.79-6.63h7.85c.01 1.16.28 2.16.78 3 .5.84 1.2 1.48 2.08 1.93.9.45 1.94.67 3.1.67 1.26 0 2.33-.26 3.21-.79.87-.52 1.55-1.3 2.01-2.34.46-1.03.7-2.3.71-3.82V59.06zm-30.19 43.41c-1.3 0-2.4-.45-3.32-1.35-.92-.89-1.38-1.98-1.37-3.27-.01-1.25.45-2.32 1.37-3.22.92-.9 2.02-1.35 3.32-1.35 1.25 0 2.34.45 3.26 1.35.93.9 1.4 1.97 1.41 3.22-.01.85-.22 1.63-.66 2.33-.44.71-1 1.26-1.71 1.67-.7.41-1.46.62-2.3.62zm-329-.14L22.11 0H0v103.06h17.69V22.03l65.22 81.07h110.78V86.64H122.2v-27.2h57.49V42.98H122.2V16.5h71.49V.04h-89.18V16.5h.01v85.83zM261.98 73.7l-11.6-14.42-35.37 43.94h23.21l23.76-29.52zM238.22.09h-23.15l82.92 103.05h23.21l-41.46-51.49L321.14.16 297.99.2l-29.84 37.06L238.22.09z"></path>
-    </svg>
-  }, {
-    title: "GraphQL",
-    icon: <svg role="img" fill="#717171" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="28" className="mr-3 h-7 w-7" width="28"><title>GraphQL</title><path d="M12.002 0a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm8.54 4.931a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm0 9.862a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm-8.54 4.931a2.138 2.138 0 1 0 0 4.276 2.138 2.138 0 1 0 0-4.276zm-8.542-4.93a2.138 2.138 0 1 0 0 4.276 2.138 2.138 0 1 0 0-4.277zm0-9.863a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm8.542-3.378L2.953 6.777v10.448l9.049 5.224 9.047-5.224V6.777zm0 1.601 7.66 13.27H4.34zm-1.387.371L3.97 15.037V7.363zm2.774 0 6.646 3.838v7.674zM5.355 17.44h13.293l-6.646 3.836z"></path></svg>
-  }
-]
-
-const beSkills: SkillItem[] = [
-  {
-    title: "NodeJS",
-    icon: <svg fill="#717171" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="28" className="mr-3 h-7 w-7" width="28"><title>Node.js</title><path d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"></path></svg>
+    company: "Freelancer",
+    role: "Frontend & Full Stack Developer",
+    location: "Remote",
+    period: "Mar. 2026 — Present",
+    current: true,
+    bullets: [
+      "Designing and building full-stack web products for clients across Vietnam.",
+      "Shipping performant UIs with React, Next.js, and TailwindCSS.",
+      "Delivering end-to-end solutions from architecture to production deployment.",
+    ],
   },
   {
-    title: "ExpressJS",
-    icon: <svg fill="#717171" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" height="28" className="mr-3 h-7 w-7" width="28"><title>Node.js</title><path d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"></path></svg>
+    company: "Mor Software",
+    role: "Frontend Developer",
+    location: "Vietnam",
+    period: "Apr. 2025 — Mar. 2026",
+    current: false,
+    bullets: [
+      "Engineered the L1F3 & SUNPOP apps in React and React Native, converting Figma designs into fully responsive, production-ready interfaces across web and mobile.",
+      "Architected and maintained a shared library of reusable UI components, reducing duplication and ensuring design consistency across the codebase.",
+      "Partnered with backend engineers to integrate REST APIs, triage bugs, and ship features within sprint deadlines in an Agile environment.",
+      "Participated in weekly code reviews, improving team code quality and adhering to established engineering standards.",
+    ],
+  },
+];
+
+const projects = [
+  {
+    name: "SangXanh",
+    role: "Full Stack Developer",
+    period: "May. 2025 — Feb. 2026",
+    link: "https://sangxanh.net",
+    bullets: [
+      "Content-rich lighting e-commerce platform using Next.js SSR, improving initial page load speed and SEO for a catalog of 500+ product SKUs.",
+      "High-performance RESTful API in Golang — product listings, inventory filtering, and order management with low-latency response under concurrent load.",
+      "Custom admin dashboard with Vite.js empowering non-technical staff to manage all site content independently.",
+      "Containerised the full application stack with Docker & Docker Compose for consistent dev/prod environments.",
+      "Automated CI/CD pipeline: linting → Docker image builds → deploy to GCP on every push to main.",
+    ],
   },
   {
-    title: "NextJS",
-    icon: <svg
-      className="min-h-7 w-7 min-w-7"
-      xmlns="http://www.w3.org/2000/svg"
-      shapeRendering="geometricPrecision"
-      fill="#717171"
-      textRendering="geometricPrecision"
-      imageRendering="optimizeQuality"
-      fillRule="evenodd"
-      clipRule="evenodd"
-      viewBox="0 0 512 103.22"
-    >
-      <path d="M340.36.04h89.18V16.5h-35.38v86.6h-17.69V16.5h-36.11V.04zM503.8 70.86c-.19-1.82-1.03-3.25-2.49-4.27-1.48-1.03-3.38-1.54-5.72-1.54-1.64 0-3.05.25-4.23.74-1.17.49-2.08 1.15-2.71 1.99-.62.84-.93 1.8-.96 2.87 0 .9.22 1.68.64 2.33.42.66.98 1.22 1.71 1.67.72.46 1.52.83 2.4 1.14.89.31 1.77.57 2.66.78l4.09 1c1.64.38 3.23.89 4.76 1.54 1.52.64 2.9 1.45 4.11 2.43 1.21.98 2.17 2.16 2.87 3.54.71 1.39 1.07 3.01 1.07 4.87 0 2.52-.65 4.73-1.95 6.64-1.31 1.9-3.19 3.39-5.66 4.46-2.46 1.07-5.43 1.61-8.93 1.61-3.38 0-6.33-.52-8.81-1.56-2.49-1.03-4.44-2.54-5.84-4.52-1.4-1.99-2.15-4.41-2.26-7.26h7.76c.11 1.49.59 2.73 1.41 3.74.82.99 1.9 1.72 3.22 2.22 1.33.48 2.82.73 4.46.73 1.71 0 3.22-.26 4.53-.77 1.29-.51 2.31-1.21 3.04-2.14.75-.9 1.12-1.98 1.13-3.21-.01-1.12-.35-2.05-.99-2.79-.66-.73-1.57-1.34-2.74-1.84-1.17-.49-2.54-.94-4.1-1.33l-4.96-1.25c-3.58-.91-6.42-2.3-8.5-4.15-2.08-1.86-3.11-4.31-3.11-7.39 0-2.53.69-4.75 2.1-6.65 1.39-1.9 3.29-3.38 5.7-4.43 2.42-1.06 5.15-1.58 8.2-1.58 3.09 0 5.8.52 8.14 1.58 2.33 1.05 4.17 2.51 5.5 4.38s2.02 4 2.06 6.42h-7.6zm-40.09-11.8h7.84v30.19c-.01 2.78-.61 5.15-1.79 7.15-1.18 2-2.83 3.52-4.93 4.59-2.1 1.07-4.56 1.61-7.35 1.61-2.55 0-4.84-.46-6.88-1.36-2.04-.9-3.66-2.24-4.84-4.01-1.2-1.78-1.79-3.98-1.79-6.63h7.85c.01 1.16.28 2.16.78 3 .5.84 1.2 1.48 2.08 1.93.9.45 1.94.67 3.1.67 1.26 0 2.33-.26 3.21-.79.87-.52 1.55-1.3 2.01-2.34.46-1.03.7-2.3.71-3.82V59.06zm-30.19 43.41c-1.3 0-2.4-.45-3.32-1.35-.92-.89-1.38-1.98-1.37-3.27-.01-1.25.45-2.32 1.37-3.22.92-.9 2.02-1.35 3.32-1.35 1.25 0 2.34.45 3.26 1.35.93.9 1.4 1.97 1.41 3.22-.01.85-.22 1.63-.66 2.33-.44.71-1 1.26-1.71 1.67-.7.41-1.46.62-2.3.62zm-329-.14L22.11 0H0v103.06h17.69V22.03l65.22 81.07h110.78V86.64H122.2v-27.2h57.49V42.98H122.2V16.5h71.49V.04h-89.18V16.5h.01v85.83zM261.98 73.7l-11.6-14.42-35.37 43.94h23.21l23.76-29.52zM238.22.09h-23.15l82.92 103.05h23.21l-41.46-51.49L321.14.16 297.99.2l-29.84 37.06L238.22.09z"></path>
-    </svg>
-  }
-]
+    name: "DMB Company Website",
+    role: "Frontend Developer",
+    period: "Aug. 2024 — Oct. 2024",
+    link: "https://dmb.com.vn",
+    bullets: [
+      "Responsive web app showcasing DMB Company's profile, products, and services.",
+      "Optimised performance and responsiveness for a seamless cross-device UX.",
+      "Integrated backend services to manage dynamic content updates efficiently.",
+    ],
+  },
+  {
+    name: "Personal Portfolio",
+    role: "Full Stack Developer",
+    period: "Apr. 2024",
+    link: "https://khuyentv.tech",
+    bullets: [
+      "Modern, responsive portfolio built with Next.js 14 App Router, GraphQL + Grafbase, and Framer Motion.",
+    ],
+  },
+];
 
+const awards = [
+  {
+    title: "CodeFest 2024 — 3rd Prize",
+    date: "Sep. 2024",
+    bullets: [
+      "Led a 4-member team in a competitive programming & robotics challenge focused on autonomous bot navigation, opponent detection, and strategic eliminations.",
+    ],
+  },
+  {
+    title: "NinjaShin 2024 — 2nd Prize",
+    date: "Oct. 2024",
+    bullets: [
+      "Product demo: Formill — applied AI to build a product that enhances the study experience.",
+    ],
+  },
+];
+
+const certs = [
+  {
+    title: "JavaScript Algorithms and Data Structures",
+    issuer: "FreeCodeCamp",
+    date: "Feb. 2025",
+  },
+  {
+    title: "Project Management Principles and Practices Specialization",
+    issuer: "University of Michigan",
+    date: "Feb. 2025",
+  },
+];
+
+/* ─────────────────────────────────────────
+   Section wrapper
+───────────────────────────────────────── */
+const Section = ({
+  id, label, title, children,
+}: {
+  id: string; label: string; title: string; children: React.ReactNode;
+}) => (
+  <section id={id} className="relative w-full px-5 py-16 md:px-10 lg:py-20 lg:px-16">
+    <div className="mx-auto max-w-5xl xl:max-w-6xl">
+      <motion.div
+        initial="hidden" whileInView="show" viewport={vp}
+        variants={stagger(0.1)}
+        className="mb-10"
+      >
+        <motion.p variants={fadeUp} className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+          {label}
+        </motion.p>
+        <motion.h2 variants={fadeUp} className="text-3xl font-bold text-white sm:text-4xl">
+          {title}
+        </motion.h2>
+        <motion.div variants={fadeUp} className="mt-3 h-px w-14 bg-gradient-to-r from-primary to-secondary" />
+      </motion.div>
+      {children}
+    </div>
+  </section>
+);
+
+/* ─────────────────────────────────────────
+   About Page
+───────────────────────────────────────── */
 const About = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
   return (
-    <div className="">
+    <div className="relative flex w-full flex-col">
 
-      <div className="flex w-full flex-col lg:flex-row">
-        <div className={`relative w-full lg:w-1/2 overflow-hidden transition-all duration-700 bg-[url(/static/about/my-image-small.webp)] bg-no-repeat bg-cover`}>
+      {/* ══════════════════════════════════
+          HERO
+      ══════════════════════════════════ */}
+      <section className="relative w-full overflow-hidden">
+        <div className="relative flex min-h-[55vh] items-end lg:min-h-[65vh]">
           <Image
-            width={500}
-            height={500}
             src="/static/about/my-image.webp"
-            alt="my-image"
-            className="h-full w-full object-cover"
+            alt="Hoshikira"
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover object-top"
           />
-          <div className="absolute bottom-0 left-0 right-0 top-0 bg-gradient-to-b from-transparent via-transparent to-black/90"></div>
-          <div className="absolute bottom-20 left-0 right-0 ">
-            <h1 className="px-10 py-10 text-center text-3xl font-bold text-white md:text-5xl">
-              Ready to discuss your project?
-            </h1>
-            <div className="px-20 md:px-10">
-              <Button href="/contact">Get in touch</Button>
-            </div>
-          </div>
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#18181b] via-[#18181b]/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#18181b]/60 to-transparent" />
 
-        <div className="flex w-full flex-col space-y-10 py-5 transition-all duration-700 md:py-10 lg:py-20">
-          <div className="px-5 md:px-12">
-            <div className="py-3 text-4xl font-bold text-gray-300 ">
-              I&apos;m Specialized in
-            </div>
-            <Writer />
+          <div className="relative z-10 w-full px-5 pb-12 md:px-10 lg:px-16 lg:pb-16">
+            <motion.div
+              initial="hidden" animate="show"
+              variants={stagger(0.12)}
+            >
+              <motion.p variants={fadeUp} className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+                About me
+              </motion.p>
+              <motion.h1 variants={fadeUp} className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl">
+                Hoshikira<span className="text-primary">.dev</span>
+              </motion.h1>
+              <motion.div variants={fadeUp} className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                  Frontend Developer
+                </span>
+                <span className="text-gray-500">→</span>
+                <span className="rounded-full border border-secondary/40 bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary">
+                  Freelancer (Now)
+                </span>
+              </motion.div>
+              <motion.p variants={fadeUp} className="mt-4 max-w-lg text-sm leading-relaxed text-gray-300 sm:text-base">
+                Frontend developer with experience at Mor Software. Now building products for clients
+                as a freelancer — from pixel-perfect UIs to full-stack systems shipped to production.
+              </motion.p>
+              <motion.div variants={fadeUp} className="mt-6 max-w-[160px]">
+                <Button href="/contact">Get in touch</Button>
+              </motion.div>
+            </motion.div>
           </div>
-          <Skills title="Front-End Development" skills={feSkills} />
-          <Skills title="Back-End Development" skills={beSkills} />
-          <Intro />
-          <DownButton targetRef={sectionRef} />
         </div>
-      </div>
-      <div ref={sectionRef} className="min-h-screen w-full transition-all duration-700">
-        <div className="h-1 w-full bg-gradient-to-r from-secondary to-primary"></div>
-        <TimelineSection />
-      </div>
+      </section>
+
+            {/* ══════════════════════════════════
+          SKILLS
+      ══════════════════════════════════ */}
+      <SkillsSection />
+
+      {/* ══════════════════════════════════
+          EXPERIENCE
+      ══════════════════════════════════ */}
+      <Section id="experience" label="Work" title="Experience">
+        <div className="relative ml-3 border-l border-white/10 pl-8 space-y-10">
+          {experience.map((job, i) => (
+            <motion.div
+              key={job.company}
+              initial="hidden" whileInView="show"
+              viewport={vp}
+              variants={stagger(0.08)}
+              className="relative"
+            >
+              {/* dot */}
+              <span
+                className={`absolute -left-[2.65rem] top-1 flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                  job.current
+                    ? "border-primary bg-primary/20"
+                    : "border-white/20 bg-[#18181b]"
+                }`}
+              >
+                {job.current && (
+                  <span className="h-2 w-2 animate-ping rounded-full bg-primary" />
+                )}
+              </span>
+
+              {/* header */}
+              <motion.div variants={fadeLeft} className="flex flex-wrap items-start justify-between gap-2">
+                <div>
+                  <h3 className="text-xl font-bold text-white">{job.company}</h3>
+                  <p className="text-sm font-medium text-primary">{job.role}</p>
+                </div>
+                <div className="flex flex-col items-end gap-1 text-right">
+                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                    job.current ? "bg-primary/15 text-primary" : "bg-white/5 text-gray-400"
+                  }`}>
+                    {job.current ? "● Current" : job.period}
+                  </span>
+                  {job.current && (
+                    <span className="text-xs text-gray-500">{job.period}</span>
+                  )}
+                  <span className="text-xs text-gray-600">{job.location}</span>
+                </div>
+              </motion.div>
+
+              {/* bullets */}
+              <ul className="mt-4 space-y-2">
+                {job.bullets.map((b, bi) => (
+                  <motion.li
+                    key={bi} variants={fadeUp}
+                    className="flex items-start gap-2.5 text-sm text-gray-400"
+                  >
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-primary/60" />
+                    {b}
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      <div className="mx-5 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent md:mx-10 lg:mx-16" />
+
+      {/* ══════════════════════════════════
+          PROJECTS
+      ══════════════════════════════════ */}
+      {/*
+      <Section id="projects" label="Work" title="Projects">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
+          {projects.map((p, i) => (
+            <motion.div
+              key={p.name}
+              initial="hidden" whileInView="show"
+              viewport={vp}
+              variants={{ hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] } } }}
+              className="group flex flex-col border border-white/[0.07] bg-white/[0.03] p-5 transition-all duration-300 hover:border-primary/30 hover:bg-primary/[0.04]"
+            >
+              
+              <div className="mb-4 flex items-start justify-between gap-2">
+                <div>
+                  <h3 className="font-bold text-white group-hover:text-primary transition-colors">{p.name}</h3>
+                  <span className="text-xs font-medium text-primary/80">{p.role}</span>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="whitespace-nowrap rounded-full bg-white/5 px-2 py-0.5 text-[11px] text-gray-500">
+                    {p.period}
+                  </span>
+                  {p.link && (
+                    <Link
+                      href={p.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-primary/60 underline-offset-2 transition-colors hover:text-primary hover:underline"
+                    >
+                      {p.link.replace("https://", "")}
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+           
+              <ul className="space-y-1.5 flex-1">
+                {p.bullets.map((b, bi) => (
+                  <li key={bi} className="flex items-start gap-2 text-xs leading-relaxed text-gray-400">
+                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-primary/50" />
+                    {b}
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      */}
+
+      <div className="mx-5 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent md:mx-10 lg:mx-16" />
+
+
+
+      <div className="mx-5 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent md:mx-10 lg:mx-16" />
+
+      {/* ══════════════════════════════════
+          AWARDS + CERTS
+      ══════════════════════════════════ */}
+      <section className="w-full px-5 py-16 md:px-10 lg:py-20 lg:px-16">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-12 xl:max-w-6xl lg:grid-cols-2">
+
+          {/* Awards */}
+          <div>
+            <motion.div initial="hidden" whileInView="show" viewport={vp} variants={stagger(0.1)} className="mb-8">
+              <motion.p variants={fadeUp} className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Achievements</motion.p>
+              <motion.h2 variants={fadeUp} className="text-3xl font-bold text-white">Awards</motion.h2>
+              <motion.div variants={fadeUp} className="mt-3 h-px w-14 bg-gradient-to-r from-primary to-secondary" />
+            </motion.div>
+
+            <div className="space-y-5">
+              {awards.map((a, i) => (
+                <motion.div
+                  key={a.title}
+                  initial="hidden" whileInView="show" viewport={vp}
+                  variants={{ hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0, transition: { duration: 0.5, delay: i * 0.1 } } }}
+                  className="border border-white/[0.07] bg-white/[0.03] p-5"
+                >
+                  <div className="mb-3 flex items-start justify-between gap-2">
+                    <div>
+                      <h3 className="font-semibold text-white text-sm">{a.title}</h3>
+                    </div>
+                    <span className="shrink-0 rounded-full bg-secondary/10 px-2 py-0.5 text-[11px] font-medium text-secondary">
+                      {a.date}
+                    </span>
+                  </div>
+                  <ul className="space-y-1">
+                    {a.bullets.map((b, bi) => (
+                      <li key={bi} className="flex items-start gap-2 text-xs text-gray-400">
+                        <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-secondary/50" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          {/* Certificates */}
+          <div>
+            <motion.div initial="hidden" whileInView="show" viewport={vp} variants={stagger(0.1)} className="mb-8">
+              <motion.p variants={fadeUp} className="mb-2 text-xs font-semibold uppercase tracking-[0.22em] text-primary">Learning</motion.p>
+              <motion.h2 variants={fadeUp} className="text-3xl font-bold text-white">Certificates</motion.h2>
+              <motion.div variants={fadeUp} className="mt-3 h-px w-14 bg-gradient-to-r from-primary to-secondary" />
+            </motion.div>
+
+            <div className="space-y-4">
+              {certs.map((c, i) => (
+                <motion.div
+                  key={c.title}
+                  initial="hidden" whileInView="show" viewport={vp}
+                  variants={{ hidden: { opacity: 0, x: 20 }, show: { opacity: 1, x: 0, transition: { duration: 0.5, delay: i * 0.1 } } }}
+                  className="border border-white/[0.07] bg-white/[0.03] p-5"
+                >
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-semibold leading-snug text-white">{c.title}</h3>
+                    <p className="mt-1 text-xs text-primary/80">{c.issuer}</p>
+                    <span className="mt-2 inline-block rounded-full bg-white/5 px-2 py-0.5 text-[11px] text-gray-500">
+                      {c.date}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-5 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent md:mx-10 lg:mx-16" />
+
+      {/* ══════════════════════════════════
+          EDUCATION
+      ══════════════════════════════════ */}
+      <Section id="education" label="Background" title="Education">
+        <motion.div
+          initial="hidden" whileInView="show" viewport={vp}
+          variants={fadeUp}
+          className="border border-white/[0.07] bg-white/[0.03] p-6 lg:p-8"
+        >
+          <div className="flex-1">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <h3 className="text-xl font-bold text-white">FPT University</h3>
+                <p className="text-sm text-primary">Software Engineering</p>
+                <p className="mt-0.5 text-xs text-gray-500">Hanoi, Vietnam</p>
+              </div>
+              <span className="rounded-full bg-secondary/10 px-3 py-1 text-xs font-medium text-secondary">
+                Sep. 2022 — Now
+              </span>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-gray-300">
+                Major: Software Engineering
+              </span>
+              <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                70% Scholarship
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      </Section>
+
+      {/* ══════════════════════════════════
+          CTA
+      ══════════════════════════════════ */}
+      <section className="relative w-full overflow-hidden px-5 py-16 md:px-10 lg:px-16 lg:py-20">
+        <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
+          <motion.div initial="hidden" whileInView="show" viewport={vp} variants={stagger(0.1)}>
+            <motion.p variants={fadeUp} className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+              Let&apos;s work together
+            </motion.p>
+            <motion.h2 variants={fadeUp} className="text-3xl font-bold text-white sm:text-4xl">
+              Ready to discuss{" "}
+              <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                your project?
+              </span>
+            </motion.h2>
+            <motion.p variants={fadeUp} className="mx-auto mt-4 max-w-md text-sm text-gray-400 sm:text-base">
+              Have a project in mind or just want to connect? I&apos;m available for freelance work.
+            </motion.p>
+            <motion.div variants={fadeUp} className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <Button href="/contact" className="sm:min-w-[160px]">Get in touch</Button>
+              <Button href="/static/CV_TRANVANKHUYEN.pdf" newTab="1" className="sm:min-w-[160px]">
+                Download CV
+              </Button>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
 
     </div>
   );

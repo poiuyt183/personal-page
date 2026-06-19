@@ -1,118 +1,219 @@
-
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import Pan from "@/components/animation/Pan";
 import Button from "@/components/Button";
-import AvtImage from "@/components/home/AvtImage";
-import { Facebook, X, Insta, LinkedIn } from "@/components/icons";
+import SocialLinks from "@/components/home/SocialLinks";
 
+/* ── lazy client components ── */
+const Writer = dynamic(() => import("@/components/home/Writer"), {
+  loading: () => (
+    <div className="mx-auto h-9 w-56 animate-pulse rounded-md bg-white/5" aria-hidden />
+  ),
+});
+
+const SpotifyEmbed = dynamic(() => import("@/components/home/SpotifyEmbed"), {
+  loading: () => (
+    <div className="h-[152px] w-full animate-pulse rounded-xl bg-white/5 sm:h-[352px]" aria-hidden />
+  ),
+});
+
+const AboutSection = dynamic(() => import("@/components/home/AboutSection"));
+
+/* ── metadata ── */
 export const metadata: Metadata = {
   title: "Hoshikira | Frontend Developer",
-  icons: {
-    icon: "/favicon.png",
-  },
+  description:
+    "Personal portfolio of Hoshikira — frontend developer crafting modern, performant web experiences.",
+  icons: { icon: "/favicon.png" },
 };
 
+/* ══════════════════════════════════════════════════ */
 const Home = () => {
   return (
-    <div className="z-45 top-0 flex h-full w-full flex-col items-center justify-center from-[#18181b] to-[#222225] pt-10 transition-all duration-700 lg:sticky lg:h-screen lg:min-h-screen lg:bg-gradient-to-r lg:py-20 ">
-      {/* <div className="rounded-full px-10 lg:px-10 xl:px-20">
-        <AvtImage />
+    <div className="relative flex min-h-full w-full flex-col">
 
-        <Pan>
-          <h1 className="mx-auto py-3 text-center text-4xl font-medium text-secondary">
-            Hoshikira<span className="text-primary">.dev</span>
-          </h1>
-          <div className="mx-auto h-1 w-4/5 bg-gradient-to-r from-secondary to-primary"></div>
-          <div className="w-full py-2 text-center text-base text-gray-300">
-            Made with <span className="text-primary underline">Coffee</span> &{" "}
-            <a
-              href="https://www.facebook.com/ptkl2053"
-              target="_blank"
-              className="text-secondary underline"
-            >
-              @ptkl2053
-            </a>
-          </div>
-          <Pan className="flex items-center justify-center space-x-5 pt-5">
-            <a
-              href="https://www.facebook.com/hoshikira18"
-              target="_blank"
-              className=""
-            >
-              <Facebook className="h-6 w-6 transition-all hover:scale-150 hover:text-primary dark:text-white" />
-            </a>
-            <a
-              href="https://twitter.com/khuyen_van24041"
-              target="_blank"
-              className=""
-            >
-              <X className="h-6 w-6 transition-all hover:scale-150 hover:text-primary dark:text-white" />
-            </a>
-            <a
-              href="https://www.instagram.com/hoshikira18/"
-              target="_blank"
-              className=""
-            >
-              <Insta className="h-6 w-6 transition-all hover:scale-150 hover:text-primary dark:text-white" />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/hoshikira"
-              target="_blank"
-              className=""
-            >
-              <LinkedIn className="h-6 w-6 transition-all hover:scale-150 hover:text-primary dark:text-white" />
-            </a>
+      {/* ═══════════════════════════════════════
+          01 — HERO
+      ═══════════════════════════════════════ */}
+      <section className="relative flex min-h-[100svh] w-full items-center justify-center overflow-hidden px-5 pb-28 pt-10 md:pb-10">
+
+        {/* blurred bg photo */}
+        <div className="absolute inset-0" aria-hidden>
+          <Image
+            src="/static/home/avt.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="scale-110 object-cover object-top opacity-20 blur-2xl"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#18181b]/70 via-[#18181b]/60 to-[#18181b]" />
+        </div>
+
+        {/* dot grid */}
+        <div
+          className="absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage:
+              "linear-gradient(#43d04c 1px,transparent 1px),linear-gradient(90deg,#43d04c 1px,transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+          aria-hidden
+        />
+
+        {/* content */}
+        <div className="relative z-10 flex w-full max-w-xl flex-col items-center text-center">
+
+          {/* avatar with spinning ring */}
+          <Pan>
+            <div className="relative mx-auto mb-7 w-fit">
+              <svg
+                className="absolute -inset-3 animate-spin [animation-duration:12s]"
+                viewBox="0 0 120 120"
+                fill="none"
+                aria-hidden
+              >
+                <circle cx="60" cy="60" r="56" stroke="url(#ring-grad)"
+                  strokeWidth="1.5" strokeDasharray="8 6" strokeLinecap="round" />
+                <defs>
+                  <linearGradient id="ring-grad" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#b0f50e" />
+                    <stop offset="1" stopColor="#43d04c" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-secondary/40 to-primary/40 blur-xl" aria-hidden />
+              <div className="relative h-36 w-36 overflow-hidden rounded-full border-2 border-primary/50 sm:h-44 sm:w-44">
+                <Image
+                  src="/static/home/avt.jpg"
+                  alt="Hoshikira portrait"
+                  width={176} height={176}
+                  sizes="(max-width: 640px) 144px, 176px"
+                  priority
+                  className="h-full w-full object-cover object-top"
+                />
+              </div>
+              <span className="absolute bottom-2 right-2 flex h-4 w-4 items-center justify-center rounded-full border-2 border-[#18181b] bg-primary sm:bottom-3 sm:right-3">
+                <span className="h-1.5 w-1.5 animate-ping rounded-full bg-primary" />
+              </span>
+            </div>
           </Pan>
-          <div className="w-full py-3 text-center text-lg text-gray-300 transition duration-150 ease-out lg:py-10">
-            <p>
-              &quot;A Good Beginning is Half the Battle Won.👨‍💻&quot;
+
+          {/* name */}
+          <Pan>
+            <p className="mb-1 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+              Hello, I&apos;m
             </p>
-          </div>
-        </Pan>
-      </div > */}
-<div className="w-full px-5 md:px-20 lg:px-40">
-      <iframe style={ { borderRadius:"12px"}} src="https://open.spotify.com/embed/playlist/08Iatn2s0qCdXwr4q9aBDa?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-</div>
-      <div className="grid grid-cols-2 gap-10">
-        <Button
-          href="/static/CV_TRANVANKHUYEN.pdf"
-          newTab="1"
-          className="pb-10 pt-10"
-        >
-          Download Resume
-        </Button>
+            <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl">
+              Hoshikira
+              <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                .dev
+              </span>
+            </h1>
+            <div className="mx-auto mt-3 h-px w-32 bg-gradient-to-r from-transparent via-primary to-transparent" />
+          </Pan>
 
-        <Button
-          href="/about"
-          className="pb-10 pt-10"
-        >
-          About me
-        </Button>
-      </div>
+          {/* typewriter */}
+          <Pan className="mt-5 flex justify-center">
+            <Writer />
+          </Pan>
 
-      <div className="flex w-full justify-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          xmlnsXlink="http://www.w3.org/1999/xlink"
-          preserveAspectRatio="xMidYMid meet"
-          version="1.0"
-          viewBox="9.7 40.1 76.9 15.4"
-          zoomAndPan="magnify"
-          width="150px"
-          className="img-mode-bw"
-          fill="#fff"
-          data-v-4fcc735c=""
-        >
-          <g id="__id5_sry9diu4c" data-v-4fcc735c="">
-            <path
-              d="M84.92,45.37c-0.88-1.72-3.47-0.2-2.59,1.51c0.09,0.17-0.12,0.45-0.31,0.54c-0.1-0.08-0.23-0.25-0.26-0.3 c-0.24-0.31-0.47-0.61-0.69-0.94c-0.87-1.28-1.79-2.66-3.38-3.07c-3.51-0.92-5.82,3.02-8.75,4.1c-1.07,0.4-3.77,0.95-4.54-0.23 c-0.41-0.62-0.37-1.63-0.65-2.33c-0.27-0.71-0.66-1.36-1.21-1.89c-1.97-1.88-5-1.38-7.15-0.1c-3.02,1.79-5.38,4.52-8.5,6.18 c-1.05,0.56-3.2,1.59-4.24,0.52c-0.52-0.54-0.69-1.46-0.98-2.14c-0.33-0.76-0.77-1.46-1.39-2.01c-2.41-2.16-5.6-1.03-7.82,0.76 c-0.61,0.49-1.19,1.03-1.77,1.56c-0.65,0.59-1.5,1.05-2.12,1.65c0,0,0,0,0,0c0-0.25-0.04-0.53-0.05-0.78 c-0.01-0.79,0.04-1.58-0.04-2.36c-0.37-3.78-4.07-5.91-7.35-3.73c-1.78,1.18-3.22,2.9-4.72,4.4c-1.78,1.79-3.57,3.57-5.35,5.36 c-1.37,1.37,0.75,3.49,2.12,2.12c1.61-1.61,3.22-3.23,4.84-4.84c1.44-1.44,2.82-3.12,4.47-4.33c1.24-0.91,2.6-0.83,2.97,0.88 c0.33,1.49-0.16,3.05,0.32,4.53c1.37,4.28,5.84,0.3,7.63-1.31c1.03-0.93,2.33-2.24,3.85-2.1c1.61,0.14,1.84,2.03,2.41,3.22 c1.71,3.55,5.88,2.72,8.73,1.2c3.2-1.7,5.58-4.61,8.75-6.32c0.85-0.46,2.12-0.91,3.04-0.38c1.29,0.74,1,2.93,1.82,4.08 c2.02,2.87,7,1.93,9.55,0.45c0.91-0.53,1.71-1.23,2.55-1.87c0.66-0.51,1.47-1.24,2.32-1.38c1.45-0.23,2.45,2.48,3.31,3.35 C82.47,52.15,86.59,48.63,84.92,45.37z"
-              fill="#fff"
-              data-v-4fcc735c=""
-            ></path>
-          </g>
-        </svg>
-      </div>
-    </div >
+          {/* bio */}
+          <Pan className="mt-4 max-w-sm text-sm leading-relaxed text-gray-400 sm:text-base">
+            Building thoughtful, performant web experiences with React, Next.js, and modern tooling.
+          </Pan>
+
+          {/* stats */}
+          <Pan className="mt-7 flex w-full justify-center gap-6 border-y border-white/5 py-5 sm:gap-10">
+            {[
+              { label: "Years exp.", value: "1+" },
+              { label: "Projects", value: "20+" },
+              { label: "Location", value: "Hà Nội" },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex flex-col items-center gap-0.5">
+                <span className="text-xl font-bold text-white sm:text-2xl">{value}</span>
+                <span className="text-xs text-gray-500">{label}</span>
+              </div>
+            ))}
+          </Pan>
+
+          {/* CTAs */}
+          <Pan className="mt-8 flex w-full max-w-xs flex-col gap-3 sm:max-w-sm sm:flex-row">
+            <Button href="#about" className="flex-1">About me</Button>
+            <Button href="/static/CV_TRANVANKHUYEN.pdf" newTab="1" className="flex-1">
+              Resume
+            </Button>
+          </Pan>
+
+          {/* social */}
+          <Pan className="mt-6">
+            <SocialLinks />
+          </Pan>
+
+          <Pan className="mt-5 text-xs text-gray-600">
+            Made with <span className="text-primary">coffee</span>
+            
+          </Pan>
+
+          {/* scroll cue */}
+          <Pan className="mt-8">
+            <div className="flex animate-bounce flex-col items-center gap-1">
+              <span className="text-[10px] uppercase tracking-widest text-gray-600">scroll</span>
+              <svg className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="m19 9-7 7-7-7" />
+              </svg>
+            </div>
+          </Pan>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════
+          02 — ABOUT
+      ═══════════════════════════════════════ */}
+      <AboutSection />
+
+      {/* ═══════════════════════════════════════
+          03 — CTA BANNER
+      ═══════════════════════════════════════ */}
+      <section className="relative w-full overflow-hidden px-5 py-20 md:px-10 lg:px-16">
+        <div className="absolute inset-0" aria-hidden>
+          <Image
+            src="/static/about/my-image.webp"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-10"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#18181b] via-[#18181b]/80 to-[#18181b]" />
+        </div>
+        <div className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+        <div className="relative z-10 mx-auto flex max-w-3xl flex-col items-center text-center">
+          <Pan>
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
+              Let&apos;s connect
+            </p>
+            <h2 className="text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+              Ready to discuss
+              <span className="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">
+                {" "}your project?
+              </span>
+            </h2>
+            <p className="mx-auto mt-5 max-w-md text-base text-gray-400">
+              Thinking about a new project, a problem to solve, or just want to connect?
+              Let&apos;s do it.
+            </p>
+          </Pan>
+
+          <Pan className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Button href="/contact" className="sm:min-w-[160px]">Get in touch</Button>
+            <Button href="/articles" className="sm:min-w-[160px]">Read articles</Button>
+          </Pan>
+        </div>
+      </section>
+
+    </div>
   );
 };
 

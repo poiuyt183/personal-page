@@ -22,22 +22,15 @@ const SideBar = () => {
 
         <Pan>
           <h1 className="mx-auto py-3 text-center text-4xl font-medium text-secondary">
-            Hoshikira<span className="text-primary">.dev</span>
+            Poiuyt<span className="text-primary">.dev</span>
           </h1>
           <div className="mx-auto h-1 w-4/5 bg-gradient-to-r from-secondary to-primary"></div>
           <div className="w-full py-2 text-center text-base text-gray-300">
             Made with <span className="text-primary underline">Coffee</span> &{" "}
-            <a
-              href="https://www.facebook.com/ptkl2053"
-              target="_blank"
-              className="text-secondary underline"
-            >
-              @ptkl2053
-            </a>
           </div>
           <Pan className="flex items-center justify-center space-x-5 pt-5">
             <a
-              href="https://www.facebook.com/hoshikira18"
+              href="https://www.facebook.com/Poiuyt18"
               target="_blank"
               className=""
             >
@@ -51,14 +44,14 @@ const SideBar = () => {
               <X className="h-6 w-6 transition-all hover:scale-150 hover:text-primary dark:text-white" />
             </a>
             <a
-              href="https://www.instagram.com/hoshikira18/"
+              href="https://www.instagram.com/Poiuyt18/"
               target="_blank"
               className=""
             >
               <Insta className="h-6 w-6 transition-all hover:scale-150 hover:text-primary dark:text-white" />
             </a>
             <a
-              href="https://www.linkedin.com/in/hoshikira"
+              href="https://www.linkedin.com/in/Poiuyt"
               target="_blank"
               className=""
             >
