@@ -113,7 +113,7 @@ const Home = () => {
 
           {/* bio */}
           <Pan className="mt-4 max-w-sm text-sm leading-relaxed text-gray-400 sm:text-base">
-            Building thoughtful, performant web experiences with React, Next.js, and modern tooling.
+            Building thoughtful, performance web experiences with React, Next.js, and modern tooling.
           </Pan>
 
           {/* stats */}

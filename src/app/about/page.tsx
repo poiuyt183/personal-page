@@ -34,7 +34,7 @@ const experience = [
     current: true,
     bullets: [
       "Designing and building full-stack web products for clients across Vietnam.",
-      "Shipping performant UIs with React, Next.js, and TailwindCSS.",
+      "Shipping performance UIs with React, Next.js, and TailwindCSS.",
       "Delivering end-to-end solutions from architecture to production deployment.",
     ],
   },
