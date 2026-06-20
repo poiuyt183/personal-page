@@ -12,11 +12,6 @@ const Writer = dynamic(() => import("@/components/home/Writer"), {
   ),
 });
 
-const SpotifyEmbed = dynamic(() => import("@/components/home/SpotifyEmbed"), {
-  loading: () => (
-    <div className="h-[152px] w-full animate-pulse rounded-xl bg-white/5 sm:h-[352px]" aria-hidden />
-  ),
-});
 
 const AboutSection = dynamic(() => import("@/components/home/AboutSection"));
 
@@ -145,7 +140,7 @@ const Home = () => {
 
           <Pan className="mt-5 text-xs text-gray-600">
             Made with <span className="text-primary">coffee</span>
-            
+
           </Pan>
 
           {/* scroll cue */}
