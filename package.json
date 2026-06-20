@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@apollo/client": "^3.9.11",
+    "@graphcms/rich-text-react-renderer": "^0.6.2",
+    "@lyket/react": "^2.1.0",
     "@tabler/icons-react": "^3.2.0",
     "axios": "^1.6.8",
     "framer-motion": "^12.4.7",
@@ -18,6 +20,7 @@
     "react": "^18",
     "react-code-block": "^1.0.0",
     "react-dom": "^18",
+    "react-masonry-css": "^1.0.16",
     "react-query": "^3.39.3",
     "sharp": "^0.33.5",
     "typewriter-effect": "^2.21.0"

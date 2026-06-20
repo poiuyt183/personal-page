@@ -15,7 +15,7 @@ import {
 
 const navItems = [
   { href: "/", label: "Home", Icon: Home },
-  { href: "/about", label: "About", Icon: About },
+  { href: "/moments", label: "Moments", Icon: About },
   { href: "/articles", label: "Articles", Icon: Articles },
   { href: "/contact", label: "Contact", Icon: Mail },
 ] as const;
@@ -82,11 +82,10 @@ const Navigation = () => {
                     href={href}
                     aria-label={label}
                     aria-current={active ? "page" : undefined}
-                    className={`relative flex h-16 w-full items-center justify-center transition-all duration-200 ${
-                      active
+                    className={`relative flex h-16 w-full items-center justify-center transition-all duration-200 ${active
                         ? "bg-primary/10 text-primary"
                         : "text-gray-400 hover:bg-white/[0.05] hover:text-gray-100"
-                    }`}
+                      }`}
                   >
                     {active && (
                       <span className="absolute right-0 top-0 h-full w-[3px] bg-gradient-to-b from-secondary to-primary" />
@@ -129,9 +128,8 @@ const Navigation = () => {
               href={href}
               aria-label={label}
               aria-current={active ? "page" : undefined}
-              className={`relative flex flex-1 flex-col items-center justify-center gap-1 transition-colors duration-150 ${
-                active ? "text-primary" : "text-gray-400"
-              }`}
+              className={`relative flex flex-1 flex-col items-center justify-center gap-1 transition-colors duration-150 ${active ? "text-primary" : "text-gray-400"
+                }`}
             >
               {active && (
                 <span className="absolute inset-x-3 top-0 h-[2px] bg-gradient-to-r from-secondary to-primary" />

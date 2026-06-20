@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/components/layout/MainLayout";
+import LyketProvider from "@/components/providers/LyketProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -21,7 +22,9 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={inter.className}>
-        <MainLayout>{children}</MainLayout>
+        <LyketProvider>
+          <MainLayout>{children}</MainLayout>
+        </LyketProvider>
       </body>
     </html>
   );
