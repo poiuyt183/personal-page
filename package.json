@@ -13,6 +13,7 @@
     "@graphcms/rich-text-react-renderer": "^0.6.2",
     "@lyket/react": "^2.1.0",
     "@tabler/icons-react": "^3.2.0",
+    "@vercel/analytics": "^2.0.1",
     "axios": "^1.6.8",
     "framer-motion": "^12.4.7",
     "grafbase": "^0.67.2",
