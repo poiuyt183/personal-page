@@ -1,0 +1,3 @@
+allowBuilds:
+  grafbase: false
+  sharp: false

@@ -1,4 +1,5 @@
 "use client";
+import { usePathname } from "next/navigation";
 import Navigation from "./Navigation";
 import "@/app/globals.css";
 import "@/app/styles/animation/fadeout.css";
@@ -8,6 +9,13 @@ interface MainLayoutProps {
 }
 
 const MainLayout = ({ children }: MainLayoutProps) => {
+  const pathname = usePathname();
+
+  // Khu admin là một "app" riêng, tự quản layout — không dùng chrome của site
+  if (pathname?.startsWith("/admin")) {
+    return <>{children}</>;
+  }
+
   return (
     <div className="relative flex min-h-screen w-full justify-center bg-black lg:px-8">
       <div className="fixed left-0 top-0 z-[500] hidden h-8 w-full bg-black lg:block" />
