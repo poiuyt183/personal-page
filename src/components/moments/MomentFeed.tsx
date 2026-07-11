@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import MomentCard from "./MomentCard";
+import LikesProvider from "./LikesProvider";
 import { parseMomentTags, type Moment } from "@/types/moment";
 
 type MomentFeedProps = {
@@ -39,6 +40,9 @@ const MomentFeed = ({ moments }: MomentFeedProps) => {
   }
 
   return (
+    // Provider fetch trạng thái like cho TOÀN BỘ moment trong 1 request,
+    // dùng danh sách đầy đủ (không phải filtered) để giữ state khi đổi tag
+    <LikesProvider momentIds={moments.map((m) => m.id)}>
     <div className="space-y-5">
       {/* ── Tag filter ── */}
       {tagsWithCount.length > 0 && (
@@ -114,6 +118,7 @@ const MomentFeed = ({ moments }: MomentFeedProps) => {
         </div>
       )}
     </div>
+    </LikesProvider>
   );
 };
 

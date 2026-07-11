@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/components/layout/MainLayout";
-import LyketProvider from "@/components/providers/LyketProvider";
 const inter = Inter({ subsets: ["latin"] });
 import { Analytics } from "@vercel/analytics/next"
 
@@ -23,10 +22,8 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className={inter.className}>
-        <LyketProvider>
-          <Analytics />
-          <MainLayout>{children}</MainLayout>
-        </LyketProvider>
+        <Analytics />
+        <MainLayout>{children}</MainLayout>
       </body>
     </html>
   );
