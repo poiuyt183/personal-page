@@ -11,6 +11,9 @@
   "engines": {
     "node": ">=24.x"
   },
+  "pnpm": {
+    "neverBuiltDependencies": ["grafbase"]
+  },
   "dependencies": {
     "@apollo/client": "^3.9.11",
     "@graphcms/rich-text-react-renderer": "^0.6.2",
