@@ -4,6 +4,7 @@ import "./globals.css";
 import MainLayout from "@/components/layout/MainLayout";
 const inter = Inter({ subsets: ["latin"] });
 import { Analytics } from "@vercel/analytics/next"
+import YandexMetrika from "@/components/analytics/YandexMetrika";
 
 export const metadata: Metadata = {
   title: "Kira - Full Stack Developer",
@@ -23,6 +24,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Analytics />
+        <YandexMetrika />
         <MainLayout>{children}</MainLayout>
       </body>
     </html>

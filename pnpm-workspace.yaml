@@ -1,2 +1,5 @@
 packages:
   - "."
+allowBuilds:
+  grafbase: false
+  sharp: false
